@@ -12,6 +12,7 @@ class scraper:
         driver_path = None
         platform = sys.platform
         self.__message_count = 0
+        self.__channel_name = ""
         if 'win' in platform and 'dar' not in platform:
             # Windows
             driver_path = 'drivers/win/chromedriver.exe'
@@ -60,18 +61,26 @@ class scraper:
         return q[::-1]
 
     def get_message(self):
-        messages = self.driver.find_elements_by_xpath("//div[@class='markup-2BOw-j']")
+        a = self.driver.find_element_by_xpath("//span[@class='channelName-3stJzi']").text
+        if self.__channel_name != a:
+            self.__channel_name = a
+            self.__message_count = 0
+        messages = self.driver.find_elements_by_xpath("//div[@class='markup-2BOw-j']")[::-1]
         message = messages[self.__message_count].text
         self.__message_count += 1
         return message
 
     def set_message_count(self, num):
+
         self.__message_count = num
         #TODO: Make this every time the person browses to another messaging page
+
 s = scraper()
 s.get_login_page()
 # INFO: Mockuser data: email: mevu@directmail24.net (tempmail) nick: MockUserForTesting#5173 pass: js76TwVj4hzBnwf
 s.fill_credentials('mevu@directmail24.net','js76TwVj4hzBnwf')
 input("Please press enter when you are done with login")
 print(s.get_message())
+print(s.get_message())
+input()
 print(s.get_message())
