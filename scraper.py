@@ -7,21 +7,28 @@ import selenium, os, sys
 
 
 class scraper:
-    def __init__():
+    def __init__(self):
         from selenium import webdriver
-        self.driver = webdriver.Firefox()
+        os.chdir("drivers/win")
+        self.driver = webdriver.Chrome()
 
-    def get_login_page():
+    def get_login_page(self):
         self.driver.get("https://discordapp.com/login")
 
-    def send_message(message):
+    def send_message(self, message):
         from selenium.webdriver.common.keys import Keys
         textbox = self.driver.find_element_by_xpath("//textarea[@class='textArea-2Spzkt textArea-2Spzkt scrollbarGhostHairline-1mSOM1 scrollbar-3dvm_9']")
         textbox.send_keys(message)
         textbox.send_keys(Keys.RETURN)
 
-    def get_message(num):
+    def get_message(self, num):
+        q = []
         for i in range(num,0,-1):
-            bigbox = self.driver.find_elements_by_xpath("//div[@class='containerCozyBounded-1rKFAn containerCozy-jafyvG container-1YxwTf']")[-num]
-            message = self.driver.find_element_by_xpath("")
-            ## TODO: finish this and test
+            message = self.driver.find_elements_by_xpath("//div[@class='markup-2BOw-j']")[-num]
+            q += [message.text]
+
+s = scraper()
+s.get_login_page()
+input("Please press enter when you are done with login")
+s.send_message("Hey")
+print(s.get_message(3))
