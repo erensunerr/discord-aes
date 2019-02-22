@@ -47,31 +47,19 @@ class scraper:
         login = self.driver.find_element_by_xpath("//button[@class='marginBottom8-AtZOdT button-3k0cO7 button-38aScr lookFilled-1Gx00P colorBrand-3pXr91 sizeLarge-1vSeWK fullWidth-1orjjo grow-q77ONN' and @type='submit']")
         login.click()
 
-    def get_n_messages(self, num: int):
-        """Get n last messages in chronological order (last one is the first)"""
-        q = []
-        messages = self.driver.find_elements_by_xpath("//div[@class='markup-2BOw-j']")
-        for i in range(num,0,-1):
-            try:
-                message = messages[-i]
-                q += [message.text]
-            except IndexError:
-                pass
-                #TODO: Website doesn't load more than a certain number of messages in javascript, find a way to take care of that
-        return q[::-1]
-
     def get_message(self):
         a = self.driver.find_element_by_xpath("//span[@class='channelName-3stJzi']").text
         if self.__channel_name != a:
             self.__channel_name = a
             self.__message_count = 0
         messages = self.driver.find_elements_by_xpath("//div[@class='markup-2BOw-j']")[::-1]
-        message = messages[self.__message_count].text
+        authors = self.driver.find_elements_by_xpath("//span[@class='username-_4ZSMR']")[::-1]
+        #TODO: make this work
+        message = {'body':messages[self.__message_count].text, 'author': authors[self.__message_count].text}
         self.__message_count += 1
         return message
 
     def set_message_count(self, num):
-
         self.__message_count = num
         #TODO: Make this every time the person browses to another messaging page
 
