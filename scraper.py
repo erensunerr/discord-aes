@@ -6,7 +6,6 @@
 import selenium, os, sys
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
-import sys
 
 class scraper:
     def __init__(self):
