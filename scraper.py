@@ -6,12 +6,26 @@
 import selenium, os, sys
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
+import sys
 
 class scraper:
     def __init__(self):
-        os.chdir("drivers/win")
-        #TODO: OS detection and chdir according to that
-        self.driver = webdriver.Chrome()
+        driver_path = None
+        platform = sys.platform
+        if 'win' in platform and 'dar' not in platform:
+            # Windows
+            driver_path = 'drivers/win/chromedriver.exe'
+        elif platform == 'darwin':
+            # Mac
+            driver_path = 'drivers/mac/chromedriver'
+        elif platform == 'linux':
+            # Linux
+            driver_path = 'drivers/linux/chromedriver'
+        else:
+            print("Your operating system '" + platform + "' is not supported")
+            exit(1)
+
+        self.driver = webdriver.Chrome(driver_path)
 
 
     def get_login_page(self):
