@@ -54,14 +54,11 @@ class scraper:
             self.__message_count = 0
         messages = self.driver.find_elements_by_xpath("//div[@class='markup-2BOw-j']")[::-1]
         authors = self.driver.find_elements_by_xpath("//span[@class='username-_4ZSMR']")[::-1]
+        print(help(authors[0]))
         #TODO: make this work
         message = {'body':messages[self.__message_count].text, 'author': authors[self.__message_count].text}
         self.__message_count += 1
         return message
-
-    def set_message_count(self, num):
-        self.__message_count = num
-        #TODO: Make this every time the person browses to another messaging page
 
 s = scraper()
 s.get_login_page()
