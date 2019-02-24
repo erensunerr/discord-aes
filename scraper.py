@@ -7,26 +7,41 @@ import selenium, os, sys
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 
+
 class scraper:
-    def __init__(self):
+    def __init__(self, browser_type='firefox'):
         driver_path = None
         platform = sys.platform
         self.__message_count = 0
         self.__channel_name = ""
+
+        driver_class = None
+
+        if browser_type == 'chrome':
+            driver_name = 'chromedriver'
+            driver_class = webdriver.Chrome
+        elif browser_type == 'firefox':
+            driver_name = 'geckodriver'
+            driver_class = webdriver.Firefox
+        else:
+            print('unsupported browser type  ' + browser_type)
+            exit(0)
+
+
         if 'win' in platform and 'dar' not in platform:
             # Windows
-            driver_path = 'drivers/win/chromedriver.exe'
+            driver_path = 'drivers/win/' + driver_name + '.exe'
         elif platform == 'darwin':
             # Mac
-            driver_path = 'drivers/mac/chromedriver'
+            driver_path = 'drivers/mac/' + driver_name
         elif platform == 'linux':
             # Linux
-            driver_path = 'drivers/linux/chromedriver'
+            driver_path = 'drivers/linux/' + driver_name
         else:
             print("Your operating system '" + platform + "' is not supported")
             exit(1)
 
-        self.driver = webdriver.Chrome(driver_path)
+        self.driver = driver_class(executable_path=driver_path)
 
 
     def get_login_page(self):
@@ -38,7 +53,7 @@ class scraper:
         textbox.send_keys(message)
         textbox.send_keys(Keys.RETURN)
 
-
+    @DeprecationWarning
     def fill_credentials(self, username: str, password: str):
         userBox = self.driver.find_element_by_xpath("//input[@class='inputDefault-_djjkz input-cIJ7To size16-14cGz5']")
         passBox = self.driver.find_element_by_xpath("//input[@class='inputDefault-_djjkz input-cIJ7To size16-14cGz5' and @type='password']")
@@ -60,11 +75,14 @@ class scraper:
         self.__message_count += 1
         return message
 
+
 s = scraper()
 s.get_login_page()
 # INFO: Mockuser data: email: mevu@directmail24.net (tempmail) nick: MockUserForTesting#5173 pass: js76TwVj4hzBnwf
-s.fill_credentials('mevu@directmail24.net','js76TwVj4hzBnwf')
+# s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
+
 input("Please press enter when you are done with login")
+
 print(s.get_message())
 print(s.get_message())
 input()
