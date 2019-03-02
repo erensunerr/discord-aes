@@ -85,7 +85,10 @@ class scraper:
             self.__message_count = 0
             self.__message_box_count = 0
         #Messsage count is for the count of messages inside a message_box
-        message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[-self.__message_box_count-1]
+        try:
+            message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[-self.__message_box_count-1]
+        except:
+            return 0
         author = message_box.find_element_by_class_name("username-_4ZSMR").text
         timestamp = message_box.find_element_by_class_name("timestampCozy-2hLAPV").text
         messages = message_box.find_elements_by_class_name("markup-2BOw-j")
@@ -96,7 +99,7 @@ class scraper:
         except:
             self.__message_box_count += 1
             self.__message_count = 0
-            time.sleep(0.1)
+
 
 
 
@@ -108,5 +111,5 @@ s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
 
 input("Please press enter when you are done with login")
 
-for i in range(20):
+for i in range(1000):
     print(s.get_message())
