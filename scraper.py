@@ -19,7 +19,7 @@ class message:
         return "<{0}> \n by <{1}> \t <{2}>".format(self.body, self.author, self.timestamp)
 
 class scraper:
-    def __init__(self, browser_type='chrome'):
+    def __init__(self, browser_type='firefox'):
         driver_path = None
         platform = sys.platform
         self.__message_count = 0
