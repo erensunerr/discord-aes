@@ -15,8 +15,12 @@ class message:
         self.body = body
         self.author = author
         self.timestamp = timestamp
-    def __str__(self):
+
+    def __repr__(self):
         return "<{0}> \n by <{1}> \t <{2}>".format(self.body, self.author, self.timestamp)
+
+    def __str__(self):
+        return message.body
 
 class scraper:
     def __init__(self, browser_type='firefox'):
