@@ -1,4 +1,4 @@
-import gnupg, b64
+import gnupg, base64
 #INFO: Crypto module will be multithreaded (another thread)
 #INFO: GNUPG-py docs -> https://pythonhosted.org/python-gnupg/
 #INFO: We will use base 64 encoding as our mock encoding
@@ -54,9 +54,6 @@ class crypto:
         pass
 
     def encrypt(self, text, key=""):
-        try:
-            key = key.key
-        #TODO: code this
         pass
 
     def decrypt(self, text, key=""):

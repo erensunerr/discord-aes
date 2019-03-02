@@ -20,7 +20,7 @@ class message:
         return "<{0}> \n by <{1}> \t <{2}>".format(self.body, self.author, self.timestamp)
 
     def __str__(self):
-        return message.body
+        return self.body
 
 class scraper:
     def __init__(self, browser_type='firefox'):
@@ -90,12 +90,15 @@ class scraper:
             self.__message_box_count = 0
         #Messsage count is for the count of messages inside a message_box
         try:
-            message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[-self.__message_box_count-1]
+            message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[self.__message_box_count]
         except:
             return 0
         author = message_box.find_element_by_class_name("username-_4ZSMR").text
         timestamp = message_box.find_element_by_class_name("timestampCozy-2hLAPV").text
         messages = message_box.find_elements_by_class_name("markup-2BOw-j")
+        if len(messages) == self.__message_count:
+            self.__message_count = 0
+            self.__message_box_count += 1
         try:
             body = messages[-self.__message_count-1].text
             self.__message_count += 1
@@ -105,15 +108,5 @@ class scraper:
             self.__message_count = 0
 
 
-
-
-
-s = scraper()
-s.get_login_page()
 # INFO: Mockuser data: email: mevu@directmail24.net (tempmail) nick: MockUserForTesting#5173 pass: js76TwVj4hzBnwf
-s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
-
-input("Please press enter when you are done with login")
-
-for i in range(1000):
-    print(s.get_message())
+#s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
