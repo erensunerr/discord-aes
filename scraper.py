@@ -7,12 +7,23 @@ import selenium, os, sys
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 
+def dbg_print(*a):
+    print(*a)
+
+class message:
+    def __init__(self, body, author, timestamp):
+        self.body = body
+        self.author = author
+        self.timestamp = timestamp
+    def __str__(self):
+        return "<{0}> \n by <{1}> \t <{2}>".format(self.body, self.author, self.timestamp)
 
 class scraper:
-    def __init__(self, browser_type='firefox'):
+    def __init__(self, browser_type='chrome'):
         driver_path = None
         platform = sys.platform
         self.__message_count = 0
+        self.__message_box_count = 0
         self.__channel_name = ""
 
         driver_class = None
@@ -24,7 +35,7 @@ class scraper:
             driver_name = 'geckodriver'
             driver_class = webdriver.Firefox
         else:
-            print('unsupported browser type  ' + browser_type)
+            dbg_print('unsupported browser type  ' + browser_type)
             exit(0)
 
 
@@ -38,7 +49,7 @@ class scraper:
             # Linux
             driver_path = 'drivers/linux/' + driver_name
         else:
-            print("Your operating system '" + platform + "' is not supported")
+            dbg_print("Your operating system '" + platform + "' is not supported")
             exit(1)
 
         self.driver = driver_class(executable_path=driver_path)
@@ -53,7 +64,8 @@ class scraper:
         textbox.send_keys(message)
         textbox.send_keys(Keys.RETURN)
 
-    @DeprecationWarning
+    #@DeprecationWarning
+    #TODO: Implement DeprecationWarning
     def fill_credentials(self, username: str, password: str):
         userBox = self.driver.find_element_by_xpath("//input[@class='inputDefault-_djjkz input-cIJ7To size16-14cGz5']")
         passBox = self.driver.find_element_by_xpath("//input[@class='inputDefault-_djjkz input-cIJ7To size16-14cGz5' and @type='password']")
@@ -67,19 +79,26 @@ class scraper:
         if self.__channel_name != a:
             self.__channel_name = a
             self.__message_count = 0
-        messages = self.driver.find_elements_by_xpath("//div[@class='markup-2BOw-j']")[::-1]
-        authors = self.driver.find_elements_by_xpath("//span[@class='username-_4ZSMR']")[::-1]
-        print(help(authors[0]))
-        #TODO: make this work
-        message = {'body':messages[self.__message_count].text, 'author': authors[self.__message_count].text}
+            self.__message_box_count = 0
+        #Messsage count is for the count of messages inside a message_box
+        message_box = self.driver.find_elements_by_xpath("//div[@class='containerCozyBounded-1rKFAn containerCozy-jafyvG container-1YxwTf']")[-self.__message_box_count-1]
+        author = message_box.find_element_by_xpath("//span[@class='username-_4ZSMR' and @role='button']").text
+        timestamp = message_box.find_element_by_xpath("//time[@class='timestampCozy-2hLAPV']").text
+        messages = message_box.find_elements_by_xpath("//div[@class='markup-2BOw-j']")
+        try:
+            body = messages[-self.__message_count-1].text
+        except:
+            self.__message_box_count += 1
+            self.__message_count = 0
         self.__message_count += 1
-        return message
+        return message(body, author, timestamp)
+
 
 
 s = scraper()
 s.get_login_page()
 # INFO: Mockuser data: email: mevu@directmail24.net (tempmail) nick: MockUserForTesting#5173 pass: js76TwVj4hzBnwf
-# s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
+s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
 
 input("Please press enter when you are done with login")
 
