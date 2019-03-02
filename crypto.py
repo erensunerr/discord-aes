@@ -6,13 +6,13 @@ import gnupg, base64
 import re
 import base64
 
-class key:
+class Key:
     def __init__(self, key, owner):
         self.key = key
         self.owner = owner
 
     def __str__(self):
-        return "{0} ---------- \n belongs to {1}\n".format(self.key,self.owner)
+        return "{0} ---------- \n belongs to {1}\n".format(self.key, self.owner)
 
 KEY_BEGIN = '-----BEGIN KEY-----'
 KEY_END = '-----END KEY-----'
@@ -21,20 +21,20 @@ class key_manager:
     def __init__(self):
         self.keys = {}
 
-    def add_key(self, key:key):
+    def add_key(self, key: Key):
         self.keys[key.owner] = key.key
 
-    def remove_key(self, key:key):
+    def remove_key(self, key: Key):
         self.keys.remove[key.owner]
 
     def save_keys(self, filename):
-        file = open(filename+".key","w")
+        file = open(filename+".key", "w")
         file.write(KEY_BEGIN + '\n')
         for i in self.keys:
             file.write("{owner}->!{key}$\n".format(owner=i,key=self.keys[i]))
         file.write(KEY_END + '\n')
         file.close()
-        return 0
+
 
     def import_keys(self, filename):
         file = open(filename,'r')
