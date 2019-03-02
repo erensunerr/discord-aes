@@ -2,32 +2,39 @@ import gnupg, base64
 #INFO: Crypto module will be multithreaded (another thread)
 #INFO: GNUPG-py docs -> https://pythonhosted.org/python-gnupg/
 #INFO: We will use base 64 encoding as our mock encoding
-class key:
+
+import re
+import base64
+
+class Key:
     def __init__(self, key, owner):
         self.key = key
         self.owner = owner
 
     def __str__(self):
-        return "{0} ---------- \n belongs to {1}\n".format(self.key,self.owner)
+        return "{0} ---------- \n belongs to {1}\n".format(self.key, self.owner)
+
+KEY_BEGIN = '-----BEGIN KEY-----'
+KEY_END = '-----END KEY-----'
 
 class key_manager:
     def __init__(self):
         self.keys = {}
 
-    def add_key(self, key:key):
+    def add_key(self, key: Key):
         self.keys[key.owner] = key.key
 
-    def remove_key(self, key:key):
+    def remove_key(self, key: Key):
         self.keys.remove[key.owner]
 
     def save_keys(self, filename):
-        file = open(filename+".key","w")
-        file.write("=====KEYS=START=====\n")
+        file = open(filename+".key", "w")
+        file.write(KEY_BEGIN + '\n')
         for i in self.keys:
             file.write("{owner}->!{key}$\n".format(owner=i,key=self.keys[i]))
-        file.write("=====KEYS=END=====\n")
+        file.write(KEY_END + '\n')
         file.close()
-        return 0
+
 
     def import_keys(self, filename):
         file = open(filename,'r')
@@ -39,6 +46,16 @@ class key_manager:
             key = key[:-1]
             self.keys[owner] = key
         file.close()
+
+
+
+def encrypt_block():
+    pass
+
+
+
+BEGIN_BLOCK = '-----BEGIN CIPHERTEXT-----'
+END_BLOCK = '-----END CIPHERTEXT-----'
 
 class crypto:
     def __init__(self):
@@ -53,9 +70,21 @@ class crypto:
         #TODO: code this
         pass
 
-    def encrypt(self, text, key=""):
-        pass
+    def encrypt(self, text: str):
 
-    def decrypt(self, text, key=""):
-        #TODO: code this
-        pass
+        text = bytearray(text, 'utf-8')
+
+        return BEGIN_BLOCK + base64.b64encode(text).decode('utf-8') + END_BLOCK
+
+
+    def decrypt(self, text: str):
+
+        delim = BEGIN_BLOCK + '(.*?)' + END_BLOCK
+
+        retval = []
+
+        for i in re.findall(delim, text, re.S):
+            decoded = base64.b64decode(bytearray(i, 'utf-8')).decode('utf-8')
+            retval.append(decoded)
+
+        return retval
