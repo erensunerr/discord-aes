@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1394</width>
+    <height>848</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>discord-pgp</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QTextEdit" name="textEdit"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLineEdit" name="lineEdit"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="SendButton">
+            <property name="text">
+             <string>Send</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1394</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionSave_Messages"/>
+   </widget>
+   <widget class="QMenu" name="menuKey">
+    <property name="title">
+     <string>Key</string>
+    </property>
+    <addaction name="actionImport_Key"/>
+    <addaction name="actionExport_Your_Key"/>
+    <addaction name="actionExport_Your_Keylist"/>
+    <addaction name="actionImport_Keylist"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuKey"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionImport_Key">
+   <property name="text">
+    <string>Import Key</string>
+   </property>
+  </action>
+  <action name="actionExport_Your_Key">
+   <property name="text">
+    <string>Export Your Key</string>
+   </property>
+  </action>
+  <action name="actionExport_Your_Keylist">
+   <property name="text">
+    <string>Export Your Keylist</string>
+   </property>
+  </action>
+  <action name="actionImport_Keylist">
+   <property name="text">
+    <string>Import Keylist</string>
+   </property>
+  </action>
+  <action name="actionSave_Messages">
+   <property name="text">
+    <string>Save Messages</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
