@@ -3,7 +3,7 @@
 # Please download the right driver @ https://selenium-python.readthedocs.io/installation.html#drivers
 # and put it in drivers folder
 
-import selenium, os, sys
+import selenium, os, sys, time
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 
@@ -75,23 +75,29 @@ class scraper:
         login.click()
 
     def get_message(self):
-        a = self.driver.find_element_by_xpath("//span[@class='channelName-3stJzi']").text
+        try:
+            a = self.driver.find_element_by_xpath("//span[@class='channelName-3stJzi']").text
+        except:
+            dbg_print("Please navigate to a texting screen")
+            return 0
         if self.__channel_name != a:
             self.__channel_name = a
             self.__message_count = 0
             self.__message_box_count = 0
         #Messsage count is for the count of messages inside a message_box
-        message_box = self.driver.find_elements_by_xpath("//div[@class='containerCozyBounded-1rKFAn containerCozy-jafyvG container-1YxwTf']")[-self.__message_box_count-1]
-        author = message_box.find_element_by_xpath("//span[@class='username-_4ZSMR' and @role='button']").text
-        timestamp = message_box.find_element_by_xpath("//time[@class='timestampCozy-2hLAPV']").text
-        messages = message_box.find_elements_by_xpath("//div[@class='markup-2BOw-j']")
+        message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[-self.__message_box_count-1]
+        author = message_box.find_element_by_class_name("username-_4ZSMR").text
+        timestamp = message_box.find_element_by_class_name("timestampCozy-2hLAPV").text
+        messages = message_box.find_elements_by_class_name("markup-2BOw-j")
         try:
             body = messages[-self.__message_count-1].text
+            self.__message_count += 1
+            return message(body, author, timestamp)
         except:
             self.__message_box_count += 1
             self.__message_count = 0
-        self.__message_count += 1
-        return message(body, author, timestamp)
+            time.sleep(0.1)
+
 
 
 
@@ -102,7 +108,5 @@ s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
 
 input("Please press enter when you are done with login")
 
-print(s.get_message())
-print(s.get_message())
-input()
-print(s.get_message())
+for i in range(20):
+    print(s.get_message())
