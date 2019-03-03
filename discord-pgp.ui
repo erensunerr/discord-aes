@@ -24,33 +24,33 @@
           <item row="0" column="2">
            <widget class="QPushButton" name="pushButton_8">
             <property name="text">
-             <string>PushButton</string>
+             <string>Set Password</string>
             </property>
            </widget>
           </item>
           <item row="0" column="0">
            <widget class="QPushButton" name="pushButton">
             <property name="text">
-             <string>PushButton</string>
+             <string>Get Live Key</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
            <widget class="QPushButton" name="pushButton_2">
             <property name="text">
-             <string>PushButton</string>
+             <string>Discard Key</string>
             </property>
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QPushButton" name="pushButton_9">
+           <widget class="QPushButton" name="StartConversation">
             <property name="text">
              <string>Start Conversation</string>
             </property>
            </widget>
           </item>
           <item row="0" column="4">
-           <widget class="QPushButton" name="pushButton_10">
+           <widget class="QPushButton" name="GetOlderMessages">
             <property name="text">
              <string>Get Older Messages</string>
             </property>

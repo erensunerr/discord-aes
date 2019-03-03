@@ -70,14 +70,14 @@ class crypto:
         #TODO: code this
         pass
 
-    def encrypt(self, text: str):
+    def encrypt(self, text: str, key:str):
 
         text = bytearray(text, 'utf-8')
 
         return BEGIN_BLOCK + base64.b64encode(text).decode('utf-8') + END_BLOCK
 
 
-    def decrypt(self, text: str):
+    def decrypt(self, text: str, key:str):
 
         delim = BEGIN_BLOCK + '(.*?)' + END_BLOCK
 
