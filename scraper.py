@@ -3,7 +3,7 @@
 # Please download the right driver @ https://selenium-python.readthedocs.io/installation.html#drivers
 # and put it in drivers folder
 
-import selenium, os, sys, time
+import selenium, os, sys, time, random
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 
@@ -15,12 +15,19 @@ class message:
         self.body = body
         self.author = author
         self.timestamp = timestamp
+        self.__id = random.randint(0,1000)
 
     def __repr__(self):
         return "<{0}> \n by <{1}> \t <{2}>".format(self.body, self.author, self.timestamp)
 
     def __str__(self):
         return self.body
+
+    def __eq__(self, obj):
+        if obj.body == self.body and obj.author == self.author and obj.timestamp == self.timestamp and self.__id == obj.__id:
+            return True
+        else:
+            return False
 
 class scraper:
     def __init__(self, browser_type='firefox'):
@@ -107,6 +114,19 @@ class scraper:
         except:
             self.__message_box_count += 1
             self.__message_count = 0
+
+    def get_all_available_messages(self):
+        a = []
+        for i in range(20):
+            a += [self.get_message()]
+        return a
+
+    def get_last_message(self):
+        message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[-1]
+        author = message_box.find_element_by_class_name("username-_4ZSMR").text
+        timestamp = message_box.find_element_by_class_name("timestampCozy-2hLAPV").text
+        messages = message_box.find_elements_by_class_name("markup-2BOw-j")
+        return message(messages[0], author, timestamp)
 
     def reset(self):
         self.__message_box_count = 0
