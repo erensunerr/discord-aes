@@ -7,21 +7,37 @@ import scraper, crypto
 # -*- coding: utf-8 -*-
 
 
+def start_up():
+    pass
 
-
-def print_message(message: scraper.message):
+def print_message_bottom(message: scraper.message):
     global mainWinUi
     file = open('message_format.html', 'r')
     message_format = file.read()
+    m = message_format.format(author=message.author, timestamp=message.timestamp, body=message.body)
     try:
-        mainWinUi.DisplayMessages.insertHtml(message_format.format(body=message.body, author=message.author, timestamp=message.timestamp))
+        mytext = self.DisplayMessages.toHtml()
+        self.DisplayMessages.setText("")
+        self.DisplayMessages.insertHtml(mytext + m)
     except:
-        time.sleep(0.4)
+        time.sleep(0.1)
+
+def print_message_top(message: scraper.message):
+        global mainWinUi
+        file = open('message_format.html', 'r')
+        message_format = file.read()
+        m = message_format.format(author=message.author, timestamp=message.timestamp, body=message.body)
+        try:
+            mytext = self.DisplayMessages.toHtml()
+            self.DisplayMessages.setText("")
+            self.DisplayMessages.insertHtml(m + mytext)
+        except:
+            time.sleep(0.1)
 
 def send_button_click():
     global s
     m = s.get_message()
-    print_message(m)
+    print_message_bottom(m)
 
 
 def save_messages_trigger():
@@ -91,7 +107,7 @@ mainWinUi = Ui_MainWindow()
 mainWinUi.setupUi(MainWindow)
 s = scraper.scraper()
 s.get_login_page()
-#s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
+s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
 input()
 MainWindow.show()
 sys.exit(app.exec_())

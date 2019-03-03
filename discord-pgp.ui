@@ -45,14 +45,14 @@
           <item row="0" column="3">
            <widget class="QPushButton" name="pushButton_9">
             <property name="text">
-             <string>PushButton</string>
+             <string>Start Conversation</string>
             </property>
            </widget>
           </item>
           <item row="0" column="4">
            <widget class="QPushButton" name="pushButton_10">
             <property name="text">
-             <string>PushButton</string>
+             <string>Get Older Messages</string>
             </property>
            </widget>
           </item>

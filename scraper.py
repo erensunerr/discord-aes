@@ -78,6 +78,7 @@ class scraper:
         login = self.driver.find_element_by_xpath("//button[@class='marginBottom8-AtZOdT button-3k0cO7 button-38aScr lookFilled-1Gx00P colorBrand-3pXr91 sizeLarge-1vSeWK fullWidth-1orjjo grow-q77ONN' and @type='submit']")
         login.click()
 
+
     def get_message(self):
         try:
             a = self.driver.find_element_by_xpath("//span[@class='channelName-3stJzi']").text
@@ -90,7 +91,7 @@ class scraper:
             self.__message_box_count = 0
         #Messsage count is for the count of messages inside a message_box
         try:
-            message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[self.__message_box_count]
+            message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[-self.__message_box_count-1]
         except:
             return 0
         author = message_box.find_element_by_class_name("username-_4ZSMR").text
@@ -107,6 +108,9 @@ class scraper:
             self.__message_box_count += 1
             self.__message_count = 0
 
+    def reset(self):
+        self.__message_box_count = 0
+        self.__message_count = 0
 
 # INFO: Mockuser data: email: mevu@directmail24.net (tempmail) nick: MockUserForTesting#5173 pass: js76TwVj4hzBnwf
 #s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
