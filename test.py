@@ -1,15 +1,17 @@
-from crypto import crypto
+from crypto import AesCipher
 
-c = crypto()
 
-s = '-----BEGIN CIPHERTEXT-----fsckfsck-----END CIPHERTEXT-----\n' \
-    '-----BEGIN CIPHERTEXT-----me-----END CIPHERTEXT-----'
+c = AesCipher()
 
-e = c.encrypt('for the north gnus')
+msg = 'hello, world!'
+p = '1234'
+
+enc = c.aes_encrypt(msg, p)
 
 print()
+print(enc)
+print()
 
-print(e, '\n')
+dec = c.aes_decrypt(enc, '1234')
 
-
-print(c.decrypt(e))
+print(dec)

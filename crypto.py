@@ -1,90 +1,76 @@
-import gnupg, base64
 #INFO: Crypto module will be multithreaded (another thread)
 #INFO: GNUPG-py docs -> https://pythonhosted.org/python-gnupg/
 #INFO: We will use base 64 encoding as our mock encoding
 
 import re
 import base64
-
-class Key:
-    def __init__(self, key, owner):
-        self.key = key
-        self.owner = owner
-
-    def __str__(self):
-        return "{0} ---------- \n belongs to {1}\n".format(self.key, self.owner)
-
-KEY_BEGIN = '-----BEGIN KEY-----'
-KEY_END = '-----END KEY-----'
-
-class key_manager:
-    def __init__(self):
-        self.keys = {}
-
-    def add_key(self, key: Key):
-        self.keys[key.owner] = key.key
-
-    def remove_key(self, key: Key):
-        self.keys.remove[key.owner]
-
-    def save_keys(self, filename):
-        file = open(filename+".key", "w")
-        file.write(KEY_BEGIN + '\n')
-        for i in self.keys:
-            file.write("{owner}->!{key}$\n".format(owner=i,key=self.keys[i]))
-        file.write(KEY_END + '\n')
-        file.close()
+from Crypto.Cipher import AES
+# assumed to be a CSPRNG
+from Crypto import Random
+import hashlib
 
 
-    def import_keys(self, filename):
-        file = open(filename,'r')
-        text = file.read()
-        get_rid_of_keys_start_and_end = text.split("=====KEYS=START=====\n")[-1].split("=====KEYS=END=====\n")[0]
-        splitted_by_newline = get_rid_of_keys_start_and_end.split('\n')
-        for i in splitted_by_newline:
-            owner, key = i.split("->!")
-            key = key[:-1]
-            self.keys[owner] = key
-        file.close()
+HASH_BEGIN = '-----BEGIN HASH-----'
+HASH_END = '-----END HASH-----'
+
+AES_BEGIN = '-----BEGIN CIPHERTEXT-----'
+AES_END = '-----END CIPHERTEXT-----'
 
 
-
-def encrypt_block():
-    pass
-
-
-
-BEGIN_BLOCK = '-----BEGIN CIPHERTEXT-----'
-END_BLOCK = '-----END CIPHERTEXT-----'
-
-class crypto:
-    def __init__(self):
-        #TODO: Code init and os detection + chdir accordingly
-        pass
-
-    def set_public_key(self):
-        #TODO: code this
-        pass
-
-    def set_private_key(self):
-        #TODO: code this
-        pass
-
-    def encrypt(self, text: str, key:str):
-
-        text = bytearray(text, 'utf-8')
-
-        return BEGIN_BLOCK + base64.b64encode(text).decode('utf-8') + END_BLOCK
+BS_AES = 32
+pad_aes = lambda s: s + (BS_AES - len(s) % BS_AES) * chr(BS_AES - len(s) % BS_AES)
+unpad_aes = lambda s : s[0:-(s[-1])]
 
 
-    def decrypt(self, text: str, key:str):
+def gen_aes_key(password, salt, iterations):
+    assert iterations > 0
+    key = bytearray(password, 'utf-8') + salt
+    for i in range(iterations):
+        key = hashlib.sha256(key).digest()
+    return key
 
-        delim = BEGIN_BLOCK + '(.*?)' + END_BLOCK
 
-        retval = []
+class AesCipher:
 
-        for i in re.findall(delim, text, re.S):
-            decoded = base64.b64decode(bytearray(i, 'utf-8')).decode('utf-8')
-            retval.append(decoded)
+    def __init__(self, iter_count=16384, salt_len=16):
+        self.iter_count = iter_count
+        self.salt_len = salt_len
 
-        return retval
+
+    def _encrypt_raw(self, plain: str, password: str):
+        plain = pad_aes(plain)
+
+        iv = Random.new().read(AES.block_size)
+        salt = Random.new().read(self.salt_len)
+
+        key = gen_aes_key(password, salt, self.iter_count)
+
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        return base64.b64encode(iv + salt + cipher.encrypt(plain)).decode('utf-8')
+
+
+    def _decrypt_raw(self, enced: str, password: str):
+        enced = base64.b64decode(bytearray(enced, 'utf-8'))
+
+        iv = enced[:AES.block_size]
+        salt = enced[AES.block_size: AES.block_size + self.salt_len]
+
+        key = gen_aes_key(password, salt, self.iter_count)
+
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        return unpad_aes(cipher.decrypt(enced[AES.block_size + self.salt_len:])).decode('utf-8')
+
+
+    def aes_encrypt(self, plain: str, password: str):
+        potato = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        return HASH_BEGIN + potato + HASH_END + AES_BEGIN + self._encrypt_raw(plain, password) + AES_END
+
+
+    def aes_decrypt(self, enced: str, password: str):
+        potato = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        delim = HASH_BEGIN + '(.*?)' + HASH_END
+        if potato in re.findall(delim, enced, re.S):
+            isol = re.findall(AES_BEGIN + '(.*?)' + AES_END, enced, re.S)[0]
+            return self._decrypt_raw(isol, password)
+        else:
+            return None
