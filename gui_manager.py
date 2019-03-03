@@ -133,6 +133,7 @@ class Ui_MainWindow(ui.Ui_MainWindow):
         self.actionExport_Your_Key.triggered.connect(export_key_trigger)
         self.actionExport_Your_Keylist.triggered.connect(export_keylist_trigger)
         self.WriteMessage.returnPressed.connect(send_button_click)
+        self.GetOlderMessages.clicked.connect(get_older_messages)
         self.DisplayMessages.setReadOnly(True)
 
     def retranslateUi(self, MainWindow):
