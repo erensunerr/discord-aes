@@ -2,6 +2,9 @@
 #INFO: GNUPG-py docs -> https://pythonhosted.org/python-gnupg/
 #INFO: We will use base 64 encoding as our mock encoding
 
+''' author: Oscar Xu '''
+
+
 import re
 import base64
 from Crypto.Cipher import AES
@@ -46,11 +49,11 @@ class AesCipher:
         key = gen_aes_key(password, salt, self.iter_count)
 
         cipher = AES.new(key, AES.MODE_CBC, iv)
-        return base64.b64encode(iv + salt + cipher.encrypt(plain)).decode('utf-8')
+        return base64.b85encode(iv + salt + cipher.encrypt(plain)).decode('utf-8')
 
 
     def _decrypt_raw(self, enced: str, password: str):
-        enced = base64.b64decode(bytearray(enced, 'utf-8'))
+        enced = base64.b85decode(bytearray(enced, 'utf-8'))
 
         iv = enced[:AES.block_size]
         salt = enced[AES.block_size: AES.block_size + self.salt_len]
