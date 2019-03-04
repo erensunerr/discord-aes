@@ -66,6 +66,7 @@ def print_message_top(message: scraper.message):
                 mainWinUi.DisplayMessages.insertHtml(m + mytext)
             except:
                 time.sleep(0.1)
+            print_lock.release()
         else:
             print_message_top(message)
 
