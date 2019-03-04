@@ -15,8 +15,7 @@ def get_older_messages():
     global s, scraper_lock
     if scraper_lock.acquire():
         for i in range(50):
-            #print_message_top(s.get_message())
-            print_message_top(scraper.message(str(i), 'null', 'null'))
+            print_message_top(s.get_message())
         scraper_lock.release()
 
 
@@ -34,10 +33,16 @@ def message_checker():
         print_message_bottom(last_message)
 
 def message_checker_t():
-    while True:
-        message_checker()
+    pass
+    #while True:
+     #   message_checker()
 
 def print_message_bottom(message: scraper.message):
+
+    if message is None:
+        print('no more messages left!')
+        return
+
     global mainWinUi, print_lock
     if print_lock.acquire():
 
@@ -58,22 +63,29 @@ def print_message_bottom(message: scraper.message):
 
 
 def print_message_top(message: scraper.message):
-        global mainWinUi, print_lock
-        if print_lock.acquire():
 
-            with open('message_format.html', 'r') as fin:
-                message_format = fin.read()
+    if message is None:
+        print('no more messages left!')
+        return
 
-            m = message_format.format(author=message.author, timestamp=message.timestamp, body=message.body)
-            try:
-                mytext = mainWinUi.DisplayMessages.toHtml()
-                mainWinUi.DisplayMessages.setText('')
-                mainWinUi.DisplayMessages.insertHtml(m + mytext)
-            except:
-                time.sleep(0.1)
-            print_lock.release()
-        else:
-            print_message_top(message)
+    global mainWinUi, print_lock
+    if print_lock.acquire():
+
+        with open('message_format.html', 'r') as fin:
+            message_format = fin.read()
+
+        m = message_format.format(author=message.author, timestamp=message.timestamp, body=message.body)
+        try:
+            mytext = mainWinUi.DisplayMessages.toHtml()
+            mainWinUi.DisplayMessages.setText('')
+            mainWinUi.DisplayMessages.insertHtml(m + mytext)
+        except:
+            time.sleep(0.1)
+            print('top printing exception')
+        print_lock.release()
+    else:
+        print_message_top(message)
+
 
 m_check_thread = threading.Thread(target=message_checker_t)
 
