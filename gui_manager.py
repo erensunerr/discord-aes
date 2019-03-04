@@ -14,7 +14,7 @@ last_message = scraper.message("-", "-", "-")
 def get_older_messages():
     global s, scraper_lock
     if scraper_lock.acquire():
-        for i in range(10):
+        for i in range(50):
             print_message_top(s.get_message())
         scraper_lock.release()
 
@@ -39,8 +39,11 @@ def message_checker_t():
 def print_message_bottom(message: scraper.message):
     global mainWinUi, print_lock
     if print_lock.acquire():
-        file = open('message_format.html', 'r')
-        message_format = file.read()
+
+        with open('message_format.html', 'r') as fin:
+            message_format = fin.read()
+            
+        # AttributeError: 'int' object has no attribute 'author'
         m = message_format.format(author=message.author, timestamp=message.timestamp, body=message.body)
         try:
             mytext = mainWinUi.DisplayMessages.toHtml()
