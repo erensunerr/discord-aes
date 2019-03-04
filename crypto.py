@@ -25,6 +25,9 @@ pad_aes = lambda s: s + (BS_AES - len(s) % BS_AES) * chr(BS_AES - len(s) % BS_AE
 unpad_aes = lambda s : s[0:-(s[-1])]
 
 
+revchnk = lambda s, n: s and revchnk(s[n:], n) + s[:n]
+
+
 def gen_aes_key(password, salt, iterations):
     assert iterations > 0
     key = bytearray(password, 'utf-8') + salt
@@ -65,12 +68,12 @@ class AesCipher:
 
 
     def aes_encrypt(self, plain: str, password: str):
-        potato = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        potato = revchnk(hashlib.sha256(password.encode('utf-8')).hexdigest(), 2)
         return HASH_BEGIN + potato + HASH_END + AES_BEGIN + self._encrypt_raw(plain, password) + AES_END
 
 
     def aes_decrypt(self, enced: str, password: str):
-        potato = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        potato = revchnk(hashlib.sha256(password.encode('utf-8')).hexdigest(), 2)
         delim = HASH_BEGIN + '(.*?)' + HASH_END
         if potato in re.findall(delim, enced, re.S):
             isol = re.findall(AES_BEGIN + '(.*?)' + AES_END, enced, re.S)[0]
