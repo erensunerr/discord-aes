@@ -42,7 +42,7 @@ def print_message_bottom(message: scraper.message):
 
         with open('message_format.html', 'r') as fin:
             message_format = fin.read()
-            
+
         # AttributeError: 'int' object has no attribute 'author'
         m = message_format.format(author=message.author, timestamp=message.timestamp, body=message.body)
         try:
@@ -60,8 +60,11 @@ def print_message_bottom(message: scraper.message):
 def print_message_top(message: scraper.message):
         global mainWinUi, print_lock
         if print_lock.acquire():
-            file = open('message_format.html', 'r')
-            message_format = file.read()
+
+            with open('message_format.html', 'r') as fin:
+                message_format = fin.read()
+
+            # AttributeError: 'int' object has no attribute 'author'
             m = message_format.format(author=message.author, timestamp=message.timestamp, body=message.body)
             try:
                 mytext = mainWinUi.DisplayMessages.toHtml()
