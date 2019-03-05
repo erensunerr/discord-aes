@@ -100,7 +100,7 @@ class scraper:
         try:
             message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[-self.__message_box_count-1]
         except:
-            return 0
+            return None
         author = message_box.find_element_by_class_name("username-_4ZSMR").text
         timestamp = message_box.find_element_by_class_name("timestampCozy-2hLAPV").text
         messages = message_box.find_elements_by_class_name("markup-2BOw-j")

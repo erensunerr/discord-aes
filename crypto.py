@@ -2,6 +2,9 @@
 #INFO: GNUPG-py docs -> https://pythonhosted.org/python-gnupg/
 #INFO: We will use base 64 encoding as our mock encoding
 
+''' author: Oscar Xu '''
+
+
 import re
 import base64
 from Crypto.Cipher import AES
@@ -20,6 +23,9 @@ AES_END = '-----END CIPHERTEXT-----'
 BS_AES = 32
 pad_aes = lambda s: s + (BS_AES - len(s) % BS_AES) * chr(BS_AES - len(s) % BS_AES)
 unpad_aes = lambda s : s[0:-(s[-1])]
+
+
+revchnk = lambda s, n: s and revchnk(s[n:], n) + s[:n]
 
 
 def gen_aes_key(password, salt, iterations):
@@ -46,11 +52,11 @@ class AesCipher:
         key = gen_aes_key(password, salt, self.iter_count)
 
         cipher = AES.new(key, AES.MODE_CBC, iv)
-        return base64.b64encode(iv + salt + cipher.encrypt(plain)).decode('utf-8')
+        return base64.b85encode(iv + salt + cipher.encrypt(plain)).decode('utf-8')
 
 
     def _decrypt_raw(self, enced: str, password: str):
-        enced = base64.b64decode(bytearray(enced, 'utf-8'))
+        enced = base64.b85decode(bytearray(enced, 'utf-8'))
 
         iv = enced[:AES.block_size]
         salt = enced[AES.block_size: AES.block_size + self.salt_len]
@@ -62,12 +68,12 @@ class AesCipher:
 
 
     def aes_encrypt(self, plain: str, password: str):
-        potato = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        potato = revchnk(hashlib.sha256(password.encode('utf-8')).hexdigest(), 2)
         return HASH_BEGIN + potato + HASH_END + AES_BEGIN + self._encrypt_raw(plain, password) + AES_END
 
 
     def aes_decrypt(self, enced: str, password: str):
-        potato = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        potato = revchnk(hashlib.sha256(password.encode('utf-8')).hexdigest(), 2)
         delim = HASH_BEGIN + '(.*?)' + HASH_END
         if potato in re.findall(delim, enced, re.S):
             isol = re.findall(AES_BEGIN + '(.*?)' + AES_END, enced, re.S)[0]
