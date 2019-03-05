@@ -33,7 +33,7 @@ def message_checker():
 
     if not real_last_message == last_message:
         last_message = real_last_message
-        print_last_message(last_message)
+        print(last_message)
 
 def message_checker_t():
     while True:
