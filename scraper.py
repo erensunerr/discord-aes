@@ -24,10 +24,8 @@ class message:
         return self.body
 
     def __eq__(self, obj):
-        if obj.body == self.body and obj.author == self.author and obj.timestamp == self.timestamp and self.__id == obj.__id:
-            return True
-        else:
-            return False
+        return obj.body == self.body and obj.author == self.author and obj.timestamp == self.timestamp and self.__id == obj.__id
+
 
 class scraper:
     def __init__(self, browser_type='firefox'):
@@ -96,7 +94,7 @@ class scraper:
             self.__channel_name = a
             self.__message_count = 0
             self.__message_box_count = 0
-        #Messsage count is for the count of messages inside a message_box
+        #Message count is for the count of messages inside a message_box
         try:
             message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[-self.__message_box_count-1]
         except:
