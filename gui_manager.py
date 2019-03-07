@@ -18,7 +18,7 @@ def get_older_messages():
     global s, scraper_lock
     if scraper_lock.acquire():
         for i in range(50):
-            print_message_bottom(s.get_message())
+            print_message_top(s.get_message())
             #print_message_top(scraper.message(str(i), ' ', ' '))
         scraper_lock.release()
 
@@ -34,10 +34,7 @@ def message_checker():
 
     if real_last_message != last_message:
         last_message = real_last_message
-<<<<<<< HEAD
-=======
         print(last_message)
->>>>>>> 8a9f25bc5e8b8c4b28054c0ce0866b8f8c736169
         print_message_bottom(last_message)
 
 def message_checker_t():
@@ -179,7 +176,7 @@ mainWinUi = Ui_MainWindow()
 mainWinUi.setupUi(MainWindow)
 s = scraper.scraper()
 s.get_login_page()
-#s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
+s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
 input()
 MainWindow.show()
 sys.exit(app.exec_())

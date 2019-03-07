@@ -9,7 +9,7 @@ from selenium import webdriver
 
 def dbg_print(*a):
     print(*a)
-
+dbg_counter1 = 0
 class message:
     def __init__(self, body, author, timestamp):
         self.body = body
@@ -34,7 +34,7 @@ class scraper:
         self.__message_count = 0
         self.__message_box_count = 0
         self.__channel_name = ""
-
+        dbg_print("#of function called, message count, messagebox count")
         driver_class = None
 
         if browser_type == 'chrome':
@@ -85,33 +85,52 @@ class scraper:
 
 
     def get_message(self):
+        global dbg_counter1
+        dbg_print(dbg_counter1, -self.__message_count-1, -self.__message_box_count-1)
+        dbg_counter1 += 1
         try:
             a = self.driver.find_element_by_xpath("//span[@class='channelName-3stJzi']").text
         except:
             dbg_print("Please navigate to a texting screen")
             return 0
         if self.__channel_name != a:
+            dbg_print("CHANNEL_CHANGED")
             self.__channel_name = a
             self.__message_count = 0
             self.__message_box_count = 0
         #Message count is for the count of messages inside a message_box
         try:
             message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[-self.__message_box_count-1]
+            #print(message_box[0])
         except:
             return None
         author = message_box.find_element_by_class_name("username-_4ZSMR").text
         timestamp = message_box.find_element_by_class_name("timestampCozy-2hLAPV").text
-        messages = message_box.find_elements_by_class_name("markup-2BOw-j")
-        if len(messages) == self.__message_count:
-            self.__message_count = 0
+        messages = message_box.find_elements_by_class_name("markup-2BOw-j")[::-1]
+        # jk = ""
+        # for i in range(len(messages)):
+        #     if i == self.__message_count:
+        #         jk = "->"
+        #     dbg_print(i,"\t" + jk,messages[i].text)
+
+        if (len(messages)-1) == self.__message_count:
+            dbg_print("LENMESSAGES == MESSAGECOUNT")
             self.__message_box_count += 1
+            self.__message_count = 0
+            dbg_print(self.__message_count)
+            return 0
         try:
-            body = messages[-self.__message_count-1].text
+            dbg_print(self.__message_count)
+            body = messages[self.__message_count].text
+        except Exception as e:
+            dbg_print("ERROR",e)
+
+        if body:
+            dbg_print(body)
             self.__message_count += 1
+            print(-self.__message_count-1)
             return message(body, author, timestamp)
-        except:
-            self.__message_box_count += 1
-            self.__message_count = 0
+
 
     def get_all_available_messages(self):
         a = []
@@ -131,4 +150,9 @@ class scraper:
         self.__message_count = 0
 
 # INFO: Mockuser data: email: mevu@directmail24.net (tempmail) nick: MockUserForTesting#5173 pass: js76TwVj4hzBnwf
-#s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
+s = scraper()
+s.get_login_page()
+s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
+input()
+for i in range(25):
+    s.get_message()
