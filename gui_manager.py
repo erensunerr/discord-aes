@@ -6,6 +6,9 @@ import scraper, crypto
 
 # -*- coding: utf-8 -*-
 
+with open('message_format.html', 'r') as fin:
+    message_format = fin.read()
+
 scraper_lock = threading.Lock()
 print_lock = threading.Lock()
 
@@ -15,7 +18,8 @@ def get_older_messages():
     global s, scraper_lock
     if scraper_lock.acquire():
         for i in range(50):
-            print_message_top(s.get_message())
+            print_message_bottom(s.get_message())
+            #print_message_top(scraper.message(str(i), ' ', ' '))
         scraper_lock.release()
 
 
@@ -30,6 +34,10 @@ def message_checker():
 
     if real_last_message != last_message:
         last_message = real_last_message
+<<<<<<< HEAD
+=======
+        print(last_message)
+>>>>>>> 8a9f25bc5e8b8c4b28054c0ce0866b8f8c736169
         print_message_bottom(last_message)
 
 def message_checker_t():
@@ -37,6 +45,9 @@ def message_checker_t():
     #while True:
      #   message_checker()
 
+'''
+inserts message from bottom to up, like getting fckd in the ass (sorry, no better analogies)
+'''
 def print_message_bottom(message: scraper.message):
 
     if message is None:
@@ -45,9 +56,6 @@ def print_message_bottom(message: scraper.message):
 
     global mainWinUi, print_lock
     if print_lock.acquire():
-
-        with open('message_format.html', 'r') as fin:
-            message_format = fin.read()
 
         m = message_format.format(author=message.author, timestamp=message.timestamp, body=message.body)
         try:
@@ -61,7 +69,9 @@ def print_message_bottom(message: scraper.message):
     else:
         print_message_bottom(message)
 
-
+'''
+stacks message on top of current selection
+'''
 def print_message_top(message: scraper.message):
 
     if message is None:
@@ -70,9 +80,6 @@ def print_message_top(message: scraper.message):
 
     global mainWinUi, print_lock
     if print_lock.acquire():
-
-        with open('message_format.html', 'r') as fin:
-            message_format = fin.read()
 
         m = message_format.format(author=message.author, timestamp=message.timestamp, body=message.body)
         try:
