@@ -30,11 +30,7 @@ def message_checker():
 
     if real_last_message != last_message:
         last_message = real_last_message
-<<<<<<< HEAD
-        print(last_message)
-=======
         print_message_bottom(last_message)
->>>>>>> 41eae0ee4225d5837e95123fbd0c51854b479c62
 
 def message_checker_t():
     pass
