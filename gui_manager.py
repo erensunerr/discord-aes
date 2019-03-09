@@ -6,7 +6,10 @@ import scraper, crypto
 
 # -*- coding: utf-8 -*-
 
-with open('message_format.html', 'r') as fin:
+def dbg_print(*a):
+    print(*a)
+
+with open('message_format_encrypted.html', 'r') as fin:
     message_format = fin.read()
 
 scraper_lock = threading.Lock()
