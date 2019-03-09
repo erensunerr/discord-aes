@@ -18,7 +18,7 @@ print_lock = threading.Lock()
 last_message = scraper.message("-", "-", "-")
 get_older_messages_count = 50
 def get_older_messages():
-    global s, scraper_lock
+    global s, scraper_lock, get_older_messages_count
     if scraper_lock.acquire():
         for i in range(get_older_messages_count):
             print_message_top(s.get_message())
