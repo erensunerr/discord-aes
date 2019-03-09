@@ -116,6 +116,9 @@ class scraper:
             dbg_print("Message box changed")
             self.__message_box_count += 1
             self.__message_count = 0
+            if len(message_boxes) == self.__message_box_count:
+                dbg_print("No more messages")
+                return None
             message_box = message_boxes[-self.__message_box_count-1]
             messages = message_box.find_elements_by_class_name("markup-2BOw-j")
 
