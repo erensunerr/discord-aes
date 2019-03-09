@@ -111,12 +111,13 @@ class scraper:
 
         message_box = message_boxes[-self.__message_box_count-1]
         messages = message_box.find_elements_by_class_name("markup-2BOw-j")
-        
+
         if len(messages) == self.__message_count:
             dbg_print("Message box changed")
             self.__message_box_count += 1
             self.__message_count = 0
-
+            message_box = message_boxes[-self.__message_box_count-1]
+            messages = message_box.find_elements_by_class_name("markup-2BOw-j")
 
         author = message_box.find_element_by_class_name("username-_4ZSMR").text
         timestamp = message_box.find_element_by_class_name("timestampCozy-2hLAPV").text
