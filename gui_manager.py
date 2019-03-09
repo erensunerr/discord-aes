@@ -42,11 +42,11 @@ def message_checker_t():
     #while True:
      #   message_checker()
 
-'''
-inserts message from bottom to up, like getting fckd in the ass (sorry, no better analogies)
-'''
-def print_message_bottom(message: scraper.message):
 
+def print_message_bottom(message: scraper.message):
+    """
+    inserts message from bottom to up, like getting f*%!#d in the ass (sorry, no better analogies)
+    """
     if message is None:
         print('no more messages left!')
         return
@@ -66,11 +66,10 @@ def print_message_bottom(message: scraper.message):
     else:
         print_message_bottom(message)
 
-'''
-stacks message on top of current selection
-'''
 def print_message_top(message: scraper.message):
-
+    """
+    stacks message on top of current selection
+    """
     if message is None:
         print('no more messages left!')
         return

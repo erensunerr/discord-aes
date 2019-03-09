@@ -151,11 +151,11 @@ class scraper:
 
 
 # INFO: Mockuser data: email: mevu@directmail24.net (tempmail) nick: MockUserForTesting#5173 pass: js76TwVj4hzBnwf
-s = scraper()
-s.get_login_page()
-s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
-input()
-for i in range(25):
-    print(s.get_message())
-del s
-print("DONE")
+# s = scraper()
+# s.get_login_page()
+# s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
+# input()
+# for i in range(25):
+#     print(s.get_message())
+# del s
+# print("DONE")
