@@ -106,11 +106,7 @@ def start_conversation():
     m_check_thread.start()
 
 
-def send_button_click():
-    global s
-    #s.send_message('this was sent via geros qt gui')
-    m = s.get_message()
-    print_message_bottom(m)
+
 
 
 def save_messages_trigger():
@@ -150,16 +146,22 @@ class Ui_MainWindow(ui.Ui_MainWindow):
 
     def setupUi(self, MainWindow):
         super().setupUi(MainWindow)
-        self.SendButton.clicked.connect(send_button_click)
+        self.SendButton.clicked.connect(self.send_button_click)
         self.StartConversation.clicked.connect(start_conversation)
         self.actionSave_Messages.triggered.connect(save_messages_trigger)
         self.actionImport_Key.triggered.connect(import_key_trigger)
         self.actionImport_Keylist.triggered.connect(import_keylist_trigger)
         self.actionExport_Your_Key.triggered.connect(export_key_trigger)
         self.actionExport_Your_Keylist.triggered.connect(export_keylist_trigger)
-        self.WriteMessage.returnPressed.connect(send_button_click)
+        self.WriteMessage.returnPressed.connect(self.send_button_click)
         self.GetOlderMessages.clicked.connect(get_older_messages)
         self.DisplayMessages.setReadOnly(True)
+
+    def send_button_click(self):
+        global s
+        m = self.WriteMessage.text()
+        s.send_message(m)
+        return True
 
     def retranslateUi(self, MainWindow):
         super().retranslateUi( MainWindow)
