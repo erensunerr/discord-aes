@@ -110,8 +110,8 @@ class scraper:
             return None
 
         message_box = message_boxes[-self.__message_box_count-1]
-
         messages = message_box.find_elements_by_class_name("markup-2BOw-j")
+        
         if len(messages) == self.__message_count:
             dbg_print("Message box changed")
             self.__message_box_count += 1
@@ -151,11 +151,11 @@ class scraper:
 
 
 # INFO: Mockuser data: email: mevu@directmail24.net (tempmail) nick: MockUserForTesting#5173 pass: js76TwVj4hzBnwf
-# s = scraper()
-# s.get_login_page()
-# s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
-# input()
-# for i in range(25):
-#     print(s.get_message())
-# del s
-# print("DONE")
+s = scraper()
+s.get_login_page()
+s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
+input()
+for i in range(25):
+    print(s.get_message())
+del s
+print("DONE")

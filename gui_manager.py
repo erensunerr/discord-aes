@@ -13,14 +13,15 @@ scraper_lock = threading.Lock()
 print_lock = threading.Lock()
 
 last_message = scraper.message("-", "-", "-")
-
+get_older_messages_count = 50
 def get_older_messages():
     global s, scraper_lock
     if scraper_lock.acquire():
-        for i in range(50):
+        for i in range(get_older_messages_count):
             print_message_top(s.get_message())
             #print_message_top(scraper.message(str(i), ' ', ' '))
         scraper_lock.release()
+        get_older_messages_count += 10
 
 
 
@@ -48,7 +49,7 @@ def print_message_bottom(message: scraper.message):
     inserts message from bottom to up, like getting f*%!#d in the ass (sorry, no better analogies)
     """
     if message is None:
-        print('no more messages left!')
+        dbg_print('no more messages left!')
         return
 
     global mainWinUi, print_lock
@@ -71,7 +72,7 @@ def print_message_top(message: scraper.message):
     stacks message on top of current selection
     """
     if message is None:
-        print('no more messages left!')
+        dbg_print('no more messages left!')
         return
 
     global mainWinUi, print_lock
@@ -97,7 +98,7 @@ def start_conversation():
     if scraper_lock.acquire():
         l = s.get_all_available_messages()
         for i in l:
-            print_message_bottom(i)
+            print_message_top(i)
         scraper_lock.release()
     m_check_thread.start()
 
