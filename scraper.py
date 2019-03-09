@@ -7,6 +7,8 @@ import selenium, os, sys, time, random
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
 
+from utils import deprecated
+
 def dbg_print(*a):
     print(*a)
 dbg_counter1 = 0
@@ -73,8 +75,8 @@ class scraper:
         textbox.send_keys(message)
         textbox.send_keys(Keys.RETURN)
 
-    #@DeprecationWarning
-    #TODO: Implement DeprecationWarning
+
+    @deprecated
     def fill_credentials(self, username: str, password: str):
         userBox = self.driver.find_element_by_xpath("//input[@class='inputDefault-_djjkz input-cIJ7To size16-14cGz5']")
         passBox = self.driver.find_element_by_xpath("//input[@class='inputDefault-_djjkz input-cIJ7To size16-14cGz5' and @type='password']")
@@ -149,10 +151,12 @@ class scraper:
         self.__message_box_count = 0
         self.__message_count = 0
 
+
 # INFO: Mockuser data: email: mevu@directmail24.net (tempmail) nick: MockUserForTesting#5173 pass: js76TwVj4hzBnwf
-s = scraper()
+'''s = scraper()
 s.get_login_page()
 s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
 input()
 for i in range(25):
-    s.get_message()
+    s.get_message()'''
+
