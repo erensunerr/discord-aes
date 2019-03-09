@@ -146,6 +146,7 @@ class scraper:
 
     def __del__(self):
         try:
+            self.driver.close()
             self.driver.quit()
         except AttributeError:
             pass
