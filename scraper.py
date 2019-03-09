@@ -38,6 +38,7 @@ class scraper:
         self.__channel_name = ""
         driver_class = None
 
+        #TODO: Add TOR browser support
         if browser_type == 'chrome':
             driver_name = 'chromedriver'
             driver_class = webdriver.Chrome
@@ -88,11 +89,14 @@ class scraper:
 
 
     def get_message(self):
+
         try:
             channelName = self.driver.find_element_by_xpath("//span[@class='channelName-3stJzi']").text
         except:
             dbg_print("Please navigate to a texting screen")
-            return 0
+            return None
+
+
         if self.__channel_name != channelName:
             #Reset the __message_count and __message_box_count if channel changed
             dbg_print("Channel Changed")
@@ -100,19 +104,26 @@ class scraper:
             self.reset()
 
         message_boxes = self.driver.find_elements_by_class_name("containerCozy-jafyvG")
-        messages = message_box.find_elements_by_class_name("markup-2BOw-j")
 
-        if len(messages) == self.__message_count:
-            self.__message_box_count += 1
-            self.__message_count = 0
-
-        if len(message_box) == self.__message_box_count:
+        if len(message_boxes) == self.__message_box_count:
             dbg_print("No more messages")
             return None
+
+        message_box = message_boxes[-self.__message_box_count-1]
+
+        messages = message_box.find_elements_by_class_name("markup-2BOw-j")
+        if len(messages) == self.__message_count:
+            dbg_print("Message box changed")
+            self.__message_box_count += 1
+            self.__message_count = 0
 
 
         author = message_box.find_element_by_class_name("username-_4ZSMR").text
         timestamp = message_box.find_element_by_class_name("timestampCozy-2hLAPV").text
+        body = messages[self.__message_count].text
+        self.__message_count += 1
+
+        return message(body, author, timestamp)
 
 
     def get_all_available_messages(self):
@@ -132,26 +143,19 @@ class scraper:
         self.__message_box_count = 0
         self.__message_count = 0
 
-<<<<<<< HEAD
     def __del__(self):
         try:
             self.driver.quit()
         except AttributeError:
             pass
 
-=======
->>>>>>> 1bdafa727927c086358587aa3a717c0e962e61a5
 
 # INFO: Mockuser data: email: mevu@directmail24.net (tempmail) nick: MockUserForTesting#5173 pass: js76TwVj4hzBnwf
-'''s = scraper()
+s = scraper()
 s.get_login_page()
 s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
 input()
 for i in range(25):
-<<<<<<< HEAD
-    s.get_message()
+    print(s.get_message())
 del s
-=======
-    s.get_message()'''
-
->>>>>>> 1bdafa727927c086358587aa3a717c0e962e61a5
+print("DONE")
