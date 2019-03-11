@@ -11,7 +11,9 @@ from utils import deprecated
 
 def dbg_print(*a):
     print(*a)
+
 dbg_counter1 = 0
+
 class message:
     def __init__(self, body, author, timestamp):
         self.body = body
@@ -84,7 +86,6 @@ class scraper:
         passBox.send_keys(password)
         login = self.driver.find_element_by_xpath("//button[@class='marginBottom8-AtZOdT button-3k0cO7 button-38aScr lookFilled-1Gx00P colorBrand-3pXr91 sizeLarge-1vSeWK fullWidth-1orjjo grow-q77ONN' and @type='submit']")
         login.click()
-        return 1
 
 
     def get_message(self):
@@ -111,7 +112,7 @@ class scraper:
         message_box = message_boxes[-self.__message_box_count-1]
         messages = message_box.find_elements_by_class_name("markup-2BOw-j")[::-1]
 
-        if len(messages) == self.__message_count:
+        if len(messages) <= self.__message_count:
             dbg_print("Message box changed")
             self.__message_box_count += 1
             self.__message_count = 0

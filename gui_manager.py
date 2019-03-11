@@ -161,6 +161,7 @@ class Ui_MainWindow(ui.Ui_MainWindow):
         global s
         m = self.WriteMessage.text()
         s.send_message(m)
+        self.WriteMessage.clear()
         return True
 
     def retranslateUi(self, MainWindow):
