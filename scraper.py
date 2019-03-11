@@ -74,7 +74,6 @@ class scraper:
         textbox = self.driver.find_element_by_xpath("//textarea[@class='textArea-2Spzkt textArea-2Spzkt scrollbarGhostHairline-1mSOM1 scrollbar-3dvm_9']")
         textbox.send_keys(message)
         textbox.send_keys(Keys.RETURN)
-        return 1
 
 
     @deprecated
@@ -110,7 +109,7 @@ class scraper:
             return None
 
         message_box = message_boxes[-self.__message_box_count-1]
-        messages = message_box.find_elements_by_class_name("markup-2BOw-j")
+        messages = message_box.find_elements_by_class_name("markup-2BOw-j")[::-1]
 
         if len(messages) == self.__message_count:
             dbg_print("Message box changed")
@@ -120,7 +119,7 @@ class scraper:
                 dbg_print("No more messages")
                 return None
             message_box = message_boxes[-self.__message_box_count-1]
-            messages = message_box.find_elements_by_class_name("markup-2BOw-j")
+            messages = message_box.find_elements_by_class_name("markup-2BOw-j")[::-1]
 
         author = message_box.find_element_by_class_name("username-_4ZSMR").text
         timestamp = message_box.find_element_by_class_name("timestampCozy-2hLAPV").text
