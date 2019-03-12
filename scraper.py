@@ -140,7 +140,7 @@ class scraper:
         message_box = self.driver.find_elements_by_class_name("containerCozy-jafyvG")[-1]
         author = message_box.find_element_by_class_name("username-_4ZSMR").text
         timestamp = message_box.find_element_by_class_name("timestampCozy-2hLAPV").text
-        messages = message_box.find_elements_by_class_name("markup-2BOw-j")
+        messages = message_box.find_elements_by_class_name("markup-2BOw-j")[::-1]
         return message(messages[0], author, timestamp)
 
     def reset(self):
