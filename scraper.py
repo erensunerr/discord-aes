@@ -1,4 +1,3 @@
-
 # SETTINGS
 # Please download the right driver @ https://selenium-python.readthedocs.io/installation.html#drivers
 # and put it in drivers folder
@@ -6,7 +5,7 @@
 import selenium, os, sys, time, random
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
-
+import crypto
 from utils import deprecated
 
 def dbg_print(*a):
@@ -14,12 +13,29 @@ def dbg_print(*a):
 
 dbg_counter1 = 0
 
+
+
 class message:
     def __init__(self, body, author, timestamp):
         self.body = body
         self.author = author
+        self.__keys = crypto.keys()
+        self.__aescipher = crypto.AesCipher()
         self.timestamp = timestamp
         self.__id = random.randint(0,1000)
+        try:
+            self.isEncrypted = (body[0:20] == "-----BEGIN HASH-----")
+        except:
+            self.isEncrypted = False
+        if self.isEncrypted:
+            self.key = self.__keys.getKey(author)
+            self.encrypted_body = self.body
+            self.body = self.__aescipher.decrypt(body)
+
+
+
+    def encrypt():
+        pass
 
     def __repr__(self):
         return "<{0}> \n by <{1}> \t <{2}>".format(self.body, self.author, self.timestamp)
@@ -164,3 +180,5 @@ class scraper:
 #     print(s.get_message())
 # del s
 # print("DONE")
+message("Body","Oscar", "12:30")
+message.encrypt()

@@ -2,7 +2,6 @@
 #INFO: GNUPG-py docs -> https://pythonhosted.org/python-gnupg/
 #INFO: We will use base 64 encoding as our mock encoding
 
-''' author: Oscar Xu '''
 
 
 import re
@@ -80,3 +79,47 @@ class AesCipher:
             return self._decrypt_raw(isol, password)
         else:
             return None
+class keys:
+    keys = {}
+    AesCipher = AesCipher()
+
+    def addKey(owner:str ,key:str):
+        keys[owner] = key
+        return 1
+
+    def getKey(owner):
+        try:
+            a = keys[owner]
+        except:
+            dbg_print("Key doesn't exist.")
+        return a
+
+    def save(file, password="defaultpassword"):
+        filestr = ""
+        for i in self.keys.keys():
+            filestr += f"{f}->{self.keys[i]}\n"
+
+        filestr_encrypted = AesCipher.aes_encrypt(filestr, password)
+        f = open(file,"w")
+        f.write(filestr_encrypted)
+        f.close()
+        return 1
+
+    def open(file, password="defaultpassword"):
+        f = open(file, "r")
+        filestr_encrypted = f.read()
+        f.close()
+        filestr = AesCipher.aes_decrypt(filestr_encrypted, password).split("\n")
+        for i in filestr:
+            owner, key = i.split("->")
+            keys[owner] = key
+        return 1
+
+    def open_raw(file, password="defaultpassword"):
+        f = open(file, "r")
+        filestr = f.read()
+        f.close()
+        for i in filestr:
+            owner, key = i.split("->")
+            keys[owner] = key
+        return 1
