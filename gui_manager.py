@@ -1,7 +1,8 @@
 # This file is for Qt GUI
 import ui, sys,time, threading
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 import scraper, crypto
 
 # -*- coding: utf-8 -*-
@@ -180,9 +181,5 @@ class Ui_MainWindow(ui.Ui_MainWindow):
 
 mainWinUi = Ui_MainWindow()
 mainWinUi.setupUi(MainWindow)
-s = scraper.scraper()
-s.get_login_page()
-#s.fill_credentials('mevu@directmail24.net', 'js76TwVj4hzBnwf')
-input()
-MainWindow.show()
+
 sys.exit(app.exec_())
